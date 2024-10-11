@@ -15,8 +15,8 @@ export class PhotoConsolidationService {
     }
   
     // 下載資料
-    async downloadDocx(): Promise<Blob> {
-      return this.httpService.postRequestForBlob({}, `download`);
+    async downloadDocx(downloadphotoName:string): Promise<Blob> {
+      return this.httpService.postRequestForBlob({}, `download/${downloadphotoName}`);
     }
   
     // 取得文件列表
