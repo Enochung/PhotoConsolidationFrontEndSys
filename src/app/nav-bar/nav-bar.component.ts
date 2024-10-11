@@ -10,9 +10,10 @@ import { Router } from 'express';
   template: `
     <div class="container">
       <nav class="navigation">
-        <a routerLink="/videotools" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page" class="nav-link" style="font-size: 1.5rem;">工具</a>
-        <!-- <a routerLink="/teachersubstitution" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page" class="nav-link" style="font-size: 1.5rem;">調代課</a>
-        <a routerLink="/hourlyrate" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page" class="nav-link" style="font-size: 1.5rem;">鐘點費</a> -->
+        <a routerLink="/fontpage" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page" class="nav-link" style="font-size: 1.5rem;">首頁</a>
+        <a routerLink="/uploadtools" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page" class="nav-link" style="font-size: 1.5rem;">上傳工具</a>
+        <a routerLink="/downloadtools" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page" class="nav-link" style="font-size: 1.5rem;">下載工具</a>
+        <!-- <a routerLink="/hourlyrate" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" ariaCurrentWhenActive="page" class="nav-link" style="font-size: 1.5rem;">鐘點費</a> -->
       </nav>
       <!-- <div class="button-container">
         <button class="action-button" (click)="onLogout()">登出</button>

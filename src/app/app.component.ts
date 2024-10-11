@@ -15,7 +15,7 @@ import { UiService } from '../@Service/UiService';
   styles: [],
 })
 export class AppComponent {
-  title = 'videostudioapplication';
+  title = 'PhotoConsolidationApplication';
   @ViewChild(ProcessBarComponent, { static: true }) processBar!: ProcessBarComponent;
 
 
