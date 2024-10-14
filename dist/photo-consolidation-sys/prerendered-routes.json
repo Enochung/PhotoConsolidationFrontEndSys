@@ -1,0 +1,7 @@
+{
+  "routes": [
+    "/downloadtools",
+    "/fontpage",
+    "/uploadtools"
+  ]
+}
