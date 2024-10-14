@@ -29,7 +29,7 @@ import { UiService } from '../../@Service/UiService';
             </div>
             <br/>
             <div class="input-group">
-              <input type="text" placeholder="請輸入標題" [(ngModel)]="photoName" class="form-control">
+              <input type="text" placeholder="請輸入標題" [(ngModel)]="titleName" class="form-control">
             </div>
             <br/>
             <div class="input-group">
@@ -49,7 +49,7 @@ import { UiService } from '../../@Service/UiService';
             </div>
             <br/>
             <div class="button-group">
-              <button class="btn-query" [disabled]="!photoName || selectedFiles.length === 0" (click)="onUpload()">上傳</button>
+              <button class="btn-query" [disabled]="!titleName || selectedFiles.length === 0" (click)="onUpload()">上傳</button>
             </div>
           </div>
         </div>
@@ -96,7 +96,7 @@ export class UploadToolsComponent {
   files: File[] = [];
   fileInputs: number[] = [0]; // 動態管理文件選擇器
   selectedFiles: FileList[] = []; // 存儲選中的文件
-  photoName: string = ''; // 圖片標題
+  titleName: string = ''; // 圖片標題
   description: string = ''; // 圖片說明
   shootingTime: string = ''; // 攝影時間
   shootingLocation: string = ''; // 攝影地點
@@ -160,7 +160,7 @@ export class UploadToolsComponent {
       this.showPrompt('請選擇至少一個文件');
       return;
     }
-    if (!this.photoName) {
+    if (!this.titleName) {
       this.showPrompt('請輸入圖片標題');
       return;
     }
@@ -182,7 +182,7 @@ export class UploadToolsComponent {
     }
 
     // 添加其他表單數據到 FormData
-    formData.append('title', this.photoName); // 標題
+    formData.append('title', this.titleName); // 標題
     formData.append('description', this.description); // 說明
     formData.append('shooting_time', this.shootingTime); // 攝影時間
     formData.append('shooting_location', this.shootingLocation); // 攝影地點
@@ -228,7 +228,11 @@ export class UploadToolsComponent {
       this.errorMsg = error.error || '文件上傳失敗';
     } finally {
       this.clearFileInputs();
-      this.photoName = '';
+      this.titleName = '';
+      this.description = '';
+      this.shootingLocation = '';
+      this.photographer = '';
+      this.shootingTime = '';
       this.uiService.hideProgress();
     }
     this.showPrompt(this.uploadResponseMsg);
@@ -246,6 +250,6 @@ export class UploadToolsComponent {
   }
 
   ngOnInit(): void {
-    //this.getFileList();
+
   }
 }

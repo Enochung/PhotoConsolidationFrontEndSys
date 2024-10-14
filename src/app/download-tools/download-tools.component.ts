@@ -60,9 +60,9 @@ export class DownloadToolsComponent {
   fileList: string[] = [];
   fileInputs: number[] = [0]; // 動態管理文件選擇器
   selectedFiles: FileList[] = []; // 存儲選中的文件
-  downloadphotoName: string='';
-  condsolidationRsponseMsg:string ='';
-  errorMsg:string ='';
+  downloadphotoName: string = '';
+  condsolidationRsponseMsg: string = '';
+  errorMsg: string = '';
 
   constructor(private photoConsolidationService: PhotoConsolidationService, private uiService: UiService) { }
 
@@ -117,36 +117,36 @@ export class DownloadToolsComponent {
       console.log(response);
       if (response && response.docx_files) {
         this.fileList = response.docx_files; // 將 docx_files 的內容賦值給 fileList
+        this.showPrompt('查詢成功');
       } else {
-        this.errorMsg = '未找到文件列表';
+        this.showPrompt('未找到文件列表');
       }
     } catch (error: any) {
-      this.errorMsg = error.error || '文件取得失敗'; // 錯誤處理
+      this.errorMsg = error.error; // 錯誤處理
+      this.showPrompt('文件取得失敗');
     }
   }
 
   // 顯示提示訊息
   showPrompt(message: string) {
+    let iconType: 'success' | 'error' | 'warning' = 'error'; // 預設為錯誤
+    // 根據 message 來設置不同的圖標類型
     if (message === '影片已合併成功，可下載') {
       this.getFileList();
       this.clearFileInputs();
+      iconType = 'success';
+    } else if (message.includes('成功')) {
+      iconType = 'success';
+    } else if (message.includes('處理')) {
+      iconType = 'warning';
     }
 
-    if (message.includes('處理')) {
-      Swal.fire({
-        title: message,
-        icon: 'warning',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: '確認'
-      });
-    } else {
-      Swal.fire({
-        title: message,
-        icon: message.includes('成功') ? 'success' : 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: '確認'
-      });
-    }
+    Swal.fire({
+      title: message,
+      icon: iconType, // 根據條件設置圖標
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: '確認'
+    });
   }
 
   //清空檔案輸入框
