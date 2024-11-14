@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SvgiconComponent } from '../svgicon/svgicon.component';
@@ -6,7 +5,7 @@ import { SvgiconComponent } from '../svgicon/svgicon.component';
 @Component({
   selector: 'app-fontpage',
   standalone: true,
-  imports: [RouterLink, NgIf, SvgiconComponent],
+  imports: [RouterLink, SvgiconComponent],
   template: `
     <main class="main-padding">
       <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">

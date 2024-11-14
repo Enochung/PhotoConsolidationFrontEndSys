@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
@@ -9,7 +8,7 @@ import { UiService } from '../../@Service/UiService';
 @Component({
   selector: 'app-upload-tools',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule, NavBarComponent],
+  imports: [FormsModule, NavBarComponent],
   template: `
     <app-nav-bar></app-nav-bar>
     <div class="container">

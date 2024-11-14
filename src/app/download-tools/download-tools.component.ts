@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import { PhotoConsolidationService } from '../../@Service/PhotoConsolidationService';
 import { UiService } from '../../@Service/UiService';
-import { NgIf } from '@angular/common';
 import { NavBarComponent } from '../nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-download-tools',
   standalone: true,
-  imports: [NgIf, NavBarComponent],
+  imports: [NavBarComponent],
   template: `
     <app-nav-bar></app-nav-bar>
     <div class="container">
@@ -73,7 +72,6 @@ export class DownloadToolsComponent {
   //下載資料
   onDownload(filename: string) {
     this.downloadphotoName = filename;
-    console.log(this.downloadphotoName);
     this.showPromptOnCheck();
     this.onDownloadDocx(filename);
   }
@@ -114,7 +112,6 @@ export class DownloadToolsComponent {
   async getFileList(): Promise<void> {
     try {
       const response = await this.photoConsolidationService.getFileList(); // 等待非同步操作完成
-      console.log(response);
       if (response && response.docx_files) {
         this.fileList = response.docx_files; // 將 docx_files 的內容賦值給 fileList
         this.showPrompt('查詢成功');
