@@ -10,8 +10,8 @@ export class HttpService implements IHttpService {
   constructor(private httpClient: HttpClient) { }
 
   private baseUrl: string = 
-  'https://rep.cgsh.tc.edu.tw/flaskapi/api/';
-  //'http://127.0.0.1:5000/';
+  //'https://rep.cgsh.tc.edu.tw/flaskapi/api/';
+  'http://127.0.0.1:5000/flaskapi/api/';
 
   async getRequest<T>(urlstr: string): Promise<T> {
     const observable = this.httpClient.get<T>(this.baseUrl + urlstr);
