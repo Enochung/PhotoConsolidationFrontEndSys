@@ -206,7 +206,6 @@ export class UploadToolsComponent {
   async onUploadVideo(data: FormData): Promise<void> {
     this.uiService.showProgress();
     try {
-      // 上傳資料
       const response = await this.photoConsolidationService.upload(data);
 
       if (response) {
