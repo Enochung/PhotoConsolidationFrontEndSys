@@ -9,8 +9,7 @@ import { HttpClient } from "@angular/common/http";
 export class HttpService implements IHttpService {
   constructor(private httpClient: HttpClient) { }
 
-  private baseUrl: string = 
-  //'https://rep.cgsh.tc.edu.tw/flaskapi/api/';
+  private baseUrl: string =
   'http://127.0.0.1:5000/flaskapi/api/';
 
   async getRequest<T>(urlstr: string): Promise<T> {
