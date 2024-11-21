@@ -18,8 +18,8 @@ export class HttpService implements IHttpService {
     return await lastValueFrom(observable);
   }
   
-  async postRequest<T>(data: any, urlstr: string): Promise<T> {
-    const observable = this.httpClient.post<T>(this.baseUrl + urlstr, data);
+  async postRequest<T>(urlstr: string, data?: any): Promise<T> {
+    const observable = this.httpClient.post<T>(this.baseUrl + urlstr, data || null);
     return await lastValueFrom(observable);
   }
 

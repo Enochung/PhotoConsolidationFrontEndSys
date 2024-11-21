@@ -202,8 +202,6 @@ export class UploadToolsComponent {
     });
   }
 
-
-
   //上傳資料
   async onUploadVideo(data: FormData): Promise<void> {
     this.uiService.showProgress();
@@ -218,11 +216,6 @@ export class UploadToolsComponent {
         this.uploadResponseMsg = '未收到回應';
       }
 
-      // 啟動輪詢以檢查影片處理狀態
-      // await this.photoConsolidationService.pollVideoProcessingStatus(filename, (message: string) => {
-      //   this.uploadResponseMsg = message;
-      //   this.showPrompt(this.uploadResponseMsg);
-      // });
     } catch (error: any) {
       this.errorMsg = error.error || '文件上傳失敗';
     } finally {
@@ -236,7 +229,6 @@ export class UploadToolsComponent {
     }
     this.showPrompt(this.uploadResponseMsg);
   }
-
 
   //清空檔案輸入框
   clearFileInputs(): void {

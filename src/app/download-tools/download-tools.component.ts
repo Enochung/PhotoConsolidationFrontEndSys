@@ -16,7 +16,7 @@ import { NavBarComponent } from '../nav-bar/nav-bar.component';
           <h4>已上傳文件列表:</h4>
           <ul>
             @for (file of fileList; track file; let i = $index) {
-            <li (click)="onDownload(file)" style="cursor: pointer; color: #61AFFE;" class="download-item">{{ file }}</li>
+            <li (click)="onClickFile(file)" style="cursor: pointer; color: #61AFFE;" class="download-item">{{ file }}</li>
             }
           </ul>
         </div>
@@ -57,8 +57,8 @@ import { NavBarComponent } from '../nav-bar/nav-bar.component';
 
 export class DownloadToolsComponent {
   fileList: string[] = [];
-  fileInputs: number[] = [0]; // 動態管理文件選擇器
-  selectedFiles: FileList[] = []; // 存儲選中的文件
+  fileInputs: number[] = [0];
+  selectedFiles: FileList[] = [];
   downloadphotoName: string = '';
   condsolidationRsponseMsg: string = '';
   errorMsg: string = '';
@@ -66,22 +66,39 @@ export class DownloadToolsComponent {
   constructor(private photoConsolidationService: PhotoConsolidationService, private uiService: UiService) { }
 
   ngOnInit() {
-    this.getFileList();
+    this.getFileList('download');
   }
 
-  //下載資料
-  onDownload(filename: string) {
+  // 下載或刪除資料
+  onClickFile(filename: string) {
     this.downloadphotoName = filename;
-    this.showPromptOnCheck();
-    this.onDownloadDocx(filename);
+    this.showPromptOnAction(filename);
   }
 
-  //下載資料
+
+  // 取得文件列表
+  async getFileList(type: string): Promise<void> {
+    try {
+      const response = await this.photoConsolidationService.getFileList();
+      if (response && response.docx_files) {
+        this.fileList = response.docx_files;
+        if(type === 'download'){
+          this.showPrompt('查詢成功');
+        }
+      } else {
+        this.showPrompt('未找到文件列表');
+      }
+    } catch (error: any) {
+      this.errorMsg = error.error;
+      this.showPrompt('文件取得失敗');
+    }
+  }
+
+  // 下載資料
   async onDownloadDocx(downloadphotoName: string) {
     this.uiService.showProgress();
     try {
       const response = await this.photoConsolidationService.downloadDocx(downloadphotoName);
-      // 下載成功，將 Blob 轉換為文件並觸發下載
       if (response) {
         const url = window.URL.createObjectURL(response);
         const a = document.createElement('a');
@@ -107,29 +124,32 @@ export class DownloadToolsComponent {
     this.downloadphotoName = '';
   }
 
-
-  // 取得文件列表
-  async getFileList(): Promise<void> {
+  // 刪除資料
+  async onDeleteDocx(filename: string) {
+    this.uiService.showProgress();
     try {
-      const response = await this.photoConsolidationService.getFileList(); // 等待非同步操作完成
-      if (response && response.docx_files) {
-        this.fileList = response.docx_files; // 將 docx_files 的內容賦值給 fileList
-        this.showPrompt('查詢成功');
+      const response = await this.photoConsolidationService.deleteDocx(filename);
+      if (response) {
+        this.condsolidationRsponseMsg = response.message || '上傳成功';
       } else {
-        this.showPrompt('未找到文件列表');
+        this.condsolidationRsponseMsg = '未收到回應';
       }
     } catch (error: any) {
-      this.errorMsg = error.error; // 錯誤處理
-      this.showPrompt('文件取得失敗');
+      // 處理異常情況
+      this.condsolidationRsponseMsg = `刪除過程中發生錯誤: ${error.message || error}`;
+    } finally {
+      this.uiService.hideProgress();
     }
+    this.showPrompt(this.condsolidationRsponseMsg);
+    this.getFileList('delete');
   }
 
   // 顯示提示訊息
   showPrompt(message: string) {
-    let iconType: 'success' | 'error' | 'warning' = 'error'; // 預設為錯誤
+    let iconType: 'success' | 'error' | 'warning' = 'error'; 
     // 根據 message 來設置不同的圖標類型
     if (message === '影片已合併成功，可下載') {
-      this.getFileList();
+      this.getFileList('download');
       this.clearFileInputs();
       iconType = 'success';
     } else if (message.includes('成功')) {
@@ -140,15 +160,15 @@ export class DownloadToolsComponent {
 
     Swal.fire({
       title: message,
-      icon: iconType, // 根據條件設置圖標
+      icon: iconType,
       confirmButtonColor: '#3085d6',
       confirmButtonText: '確認'
     });
   }
 
-  //清空檔案輸入框
+  // 清空檔案輸入框
   clearFileInputs(): void {
-    this.fileInputs = [0]; // 重設文件選擇器
+    this.fileInputs = [0];
     this.selectedFiles = [];
     const fileInputElements = document.querySelectorAll('input[type="file"]');
     fileInputElements.forEach(fileInput => {
@@ -158,11 +178,11 @@ export class DownloadToolsComponent {
 
 
   // 顯示確認訊息
-  showPromptOnCheck() {
+  showPromptOnCheck(filename: string, type: string) {
     Swal.fire({
       title: '確認',
-      text: '是否要下載檔案?',
-      icon: 'question',
+      text: type === 'download' ? '是否要下載檔案?' : '是否要刪除檔案',
+      icon: type === 'download' ? 'question' : 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       confirmButtonText: '確認',
@@ -170,7 +190,31 @@ export class DownloadToolsComponent {
       cancelButtonText: '取消'
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.onDownloadVideo(this.downloadphotoName);
+        if (type === 'download') {
+          this.onDownloadDocx(filename);
+        } else if (type === 'delete') {
+          this.onDeleteDocx(filename);
+        }
+      }
+    });
+  }
+
+  // 顯示動作選擇訊息
+  showPromptOnAction(filename: string) {
+    Swal.fire({
+      title: '請選擇操作',
+      text: '您想要刪除還是下載檔案?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '下載',
+      confirmButtonColor: '#3085d6',
+      cancelButtonText: '刪除',
+      cancelButtonColor: '#d33'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.showPromptOnCheck(filename, 'download');
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        this.showPromptOnCheck(filename, 'delete');
       }
     });
   }
